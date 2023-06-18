@@ -17,7 +17,6 @@ async def gather_data(app_id, disc_id):
       soup = BeautifulSoup(await response.text(), 'html.parser')
       discussion = soup.find(id=f"forum_op_{disc_id}")
       top_message = discussion.find(class_="content")
-      print(top_message)
 
 if __name__ == '__main__':
   asyncio.run(gather_data("1066780", "3069740688714545717"))
