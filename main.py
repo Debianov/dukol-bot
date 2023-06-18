@@ -1,24 +1,41 @@
 import os
-from discord import commands
-from discord import tasks
+from discord.ext import commands, tasks
+from discord import Embed, Intents
 import steam
+from typing import Final
 
-discord_token = os.environ['DISCORD_TOKEN']
-
-class BasedCog(commands.Cog):
-
-  def __init__(self) -> None:
+class Bot(commands.Bot):
+  
+  def __init__(self, channel_id: int, *args: Any, **kwargs: Any) -> None:
+    super().__init__(*args, **kwargs)
+    self.channel = self.get_channel(channel_id)
     self.new_part_msg: str = ""
-    self.last_msg: str = ""
+    self.len_last_msg: int = -1
 
-  @tasks.loop(hours=1)
-  def update_checker(self) -> None:
-    msg_to_analyze = steam.gather_data("1066780", "3069740688714545717")
-    if self.last_message:
-      self.last_msg = msg_to_analyze
-      return
-    if not msg_to_anaylyze == self.last_message:
-      self.new_part_msg = 
+  async def setup_hook(self) -> None:
+    self.update_checker.start()
+
+  @tasks.loop(seconds=1)
+  async def update_checker(self) -> None:
+    msg_to_analyze = await steam.gather_data("1066780", "3069740688714545717")
+    self.new_part_msg = msg_to_analyze
+    await self.send_update_notification()
+    if self.len_last_msg == -1:
+        self.last_msg = len(msg_to_analyze)
+      else:
+        if self.len_last_msg < len(msg_to_analyze):
+          self.new_part_msg = msg_to_analyze[self.len_last_msg:]
+  
+  async def send_update_notification(self) -> None:
+    if self.new_part_msg:
+      notification_embed = Embed()
+      notification_embed.add_field(name="повідомлення", value=self.new_part_msg)
+      await self.channel.send(embed=notification_embed)
+      self.new_part_msg = ""
 
 if __name__ == '__main__':
-  asyncio.run(gather_data())
+  intents = Intents.all()
+  target_channel = 792679070008606753 # ID канала, куда отсылать
+  dukol = commands.Bot(command_prefix="d ", intents=intents, channel_id)
+  dukol.add_cog(BasedCog(target_channel))
+  dukol.run(token=os.environ['DISCORD_TOKEN'])
