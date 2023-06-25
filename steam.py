@@ -1,11 +1,9 @@
-import json
 from bs4 import BeautifulSoup
 import asyncio
 import aiohttp
-from typing import List
 
-async def gather_data(app_id, disc_id):
-    url = f'https://steamcommunity.com/app/{app_id}/discussions/0/{disc_id}'
+async def gather_data(app_id: str, disc_id: str) -> str:
+    url = f'https://steamcommunity.com/app/{app_id}/discussions/2/{disc_id}'
     header = {
       'Accept': '*/*',
       'Accept-Encoding': 'gzip, deflate, br',
@@ -17,6 +15,4 @@ async def gather_data(app_id, disc_id):
       soup = BeautifulSoup(await response.text(), 'html.parser')
       discussion = soup.find(id=f"forum_op_{disc_id}")
       top_message = discussion.find(class_="content")
-
-if __name__ == '__main__':
-  asyncio.run(gather_data("1066780", "3069740688714545717"))
+      return top_message

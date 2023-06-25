@@ -2,9 +2,9 @@ import os
 from discord.ext import commands, tasks
 from discord import Embed, Intents
 import steam
-from typing import Final
+from typing import Final, Any
 
-class Bot(commands.Bot):
+class DukolBot(commands.Bot):
   
   def __init__(self, channel_id: int, *args: Any, **kwargs: Any) -> None:
     super().__init__(*args, **kwargs)
@@ -22,9 +22,9 @@ class Bot(commands.Bot):
     await self.send_update_notification()
     if self.len_last_msg == -1:
         self.last_msg = len(msg_to_analyze)
-      else:
-        if self.len_last_msg < len(msg_to_analyze):
-          self.new_part_msg = msg_to_analyze[self.len_last_msg:]
+    else:
+      if self.len_last_msg < len(msg_to_analyze):
+        self.new_part_msg = msg_to_analyze[self.len_last_msg:]
   
   async def send_update_notification(self) -> None:
     if self.new_part_msg:
@@ -36,6 +36,5 @@ class Bot(commands.Bot):
 if __name__ == '__main__':
   intents = Intents.all()
   target_channel = 792679070008606753 # ID канала, куда отсылать
-  dukol = commands.Bot(command_prefix="d ", intents=intents, channel_id)
-  dukol.add_cog(BasedCog(target_channel))
+  dukol = DukolBot(target_channel, command_prefix="d ", intents=intents)
   dukol.run(token=os.environ['DISCORD_TOKEN'])
