@@ -8,16 +8,17 @@ class DukolBot(commands.Bot):
   
   def __init__(self, channel_id: int, *args: Any, **kwargs: Any) -> None:
     super().__init__(*args, **kwargs)
-    self.channel = self.get_channel(channel_id)
+    self.channel_id: int = channel_id
     self.new_part_msg: str = ""
     self.len_last_msg: int = -1
 
   async def setup_hook(self) -> None:
+    self.channel = self.get_channel(self.channel_id)
     self.update_checker.start()
 
   @tasks.loop(seconds=1)
   async def update_checker(self) -> None:
-    msg_to_analyze = await steam.gather_data("1066780", "3069740688714545717")
+    msg_to_analyze = await steam.gather_data("516750", "3069740688714545717")
     self.new_part_msg = msg_to_analyze
     await self.send_update_notification()
     if self.len_last_msg == -1:
@@ -35,6 +36,6 @@ class DukolBot(commands.Bot):
 
 if __name__ == '__main__':
   intents = Intents.all()
-  target_channel = 792679070008606753 # ID канала, куда отсылать
+  target_channel = 792679070008606753
   dukol = DukolBot(target_channel, command_prefix="d ", intents=intents)
   dukol.run(token=os.environ['DISCORD_TOKEN'])
