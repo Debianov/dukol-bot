@@ -1,12 +1,12 @@
 import os
-from discord.ext import commands, tasks
-from discord import Embed, Intents
-from typing import Final, Any
-import asyncio
+from discord.ext import commands
+from discord import Intents
+from web_server import keep_alive
 
 class DukolBot(commands.Bot):
 
   async def on_ready(self):
+    keep_alive()
     await self.load_extension('notificator')
 
 if __name__ == '__main__':

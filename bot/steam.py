@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import asyncio
 import aiohttp
 
 async def gather_data(app_id: str, disc_id: str) -> str:

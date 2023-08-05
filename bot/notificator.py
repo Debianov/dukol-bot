@@ -1,9 +1,6 @@
-import os
 from discord.ext import commands, tasks
-from discord import Embed, Intents
+from discord import Embed
 import steam
-from typing import Final, Any
-import asyncio
 
 class UpdateNotificator(commands.Cog):
   
@@ -15,7 +12,7 @@ class UpdateNotificator(commands.Cog):
   async def cog_load(self) -> None:
     self.update_checker.start()
 
-  @tasks.loop(minutes=30)
+  @tasks.loop(minutes=1)
   async def update_checker(self) -> None:
     msg_to_analyze = await steam.gather_data("516750", "3069740688714545717")
     if self.len_last_msg < len(msg_to_analyze):
