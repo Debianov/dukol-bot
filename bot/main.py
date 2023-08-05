@@ -31,7 +31,7 @@ class UpdateNotificator(commands.Cog):
     if self.new_part_msg:
       notification_embed = Embed()
       notification_embed.add_field(name="повідомлення", value=self.new_part_msg)
-      await self.channel.send(embed=notification_embed)
+      await self.target_channel.send(embed=notification_embed)
       self.new_part_msg = ""
 
 if __name__ == '__main__':
