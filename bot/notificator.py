@@ -10,7 +10,7 @@ class UpdateNotificator(commands.Cog):
   def __init__(self, bot: commands.Bot, channel_id: int) -> None:
     self.bot = bot
     self.target_channel = self.bot.get_channel(channel_id)
-    self.len_last_msg: int = -1
+    self.len_last_msg: int = 0
 
   async def cog_load(self) -> None:
     self.update_checker.start()
@@ -19,7 +19,7 @@ class UpdateNotificator(commands.Cog):
   async def update_checker(self) -> None:
     msg_to_analyze = await steam.gather_data("516750", "3069740688714545717")
     if self.len_last_msg < len(msg_to_analyze):
-      await self.send_update_notification(msg_to_analyze[self.len_last_msg:])
+      await self.send_update_notification(str(msg_to_analyze)[self.len_last_msg:])
     self.len_last_msg = len(msg_to_analyze)
   
   async def send_update_notification(self, msg_text: str) -> None:
