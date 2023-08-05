@@ -3,21 +3,21 @@
     "bot/main.py": [
       {
         "id": "61d3e4d3-a973-44bf-80cd-7f631bbf8df1",
-        "line": 11,
-        "version": 259,
-        "index": 283
+        "line": 3,
+        "version": 1148,
+        "index": 84
       },
       {
         "id": "2fd18de9-bb0a-4b45-afb1-81b753fda753",
-        "line": 15,
-        "version": 259,
-        "index": 423
+        "line": 3,
+        "version": 1148,
+        "index": 84
       },
       {
         "id": "a49d5a62-60f7-416c-8a2c-317a48f36a66",
-        "line": 44,
-        "version": 259,
-        "index": 1402
+        "line": 3,
+        "version": 1148,
+        "index": 84
       }
     ],
     "steam.py": [
