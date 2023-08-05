@@ -3,17 +3,17 @@ from discord.ext import commands, tasks
 from discord import Embed, Intents
 import steam
 from typing import Final, Any
+import asyncio
 
-class DukolBot(commands.Bot):
+class UpdateNotificator(commands.Cog):
   
-  def __init__(self, channel_id: int, *args: Any, **kwargs: Any) -> None:
-    super().__init__(*args, **kwargs)
-    self.channel_id: int = channel_id
+  def __init__(self, bot: commands.Bot, channel_id: int) -> None:
+    self.bot = bot
+    self.channel = self.bot.get_channel(channel_id)
     self.new_part_msg: str = ""
     self.len_last_msg: int = -1
 
-  async def setup_hook(self) -> None:
-    self.channel = self.get_channel(self.channel_id)
+  def cog_load(self) -> None:
     self.update_checker.start()
 
   @tasks.loop(seconds=1)
@@ -22,7 +22,7 @@ class DukolBot(commands.Bot):
     self.new_part_msg = msg_to_analyze
     await self.send_update_notification()
     if self.len_last_msg == -1:
-        self.last_msg = len(msg_to_analyze)
+        self.len_last_msg = len(msg_to_analyze)
     else:
       if self.len_last_msg < len(msg_to_analyze):
         self.new_part_msg = msg_to_analyze[self.len_last_msg:]
@@ -36,6 +36,9 @@ class DukolBot(commands.Bot):
 
 if __name__ == '__main__':
   intents = Intents.all()
+  bot = commands.Bot(command_prefix="d ", intents=intents)
   target_channel = 792679070008606753
-  dukol = DukolBot(target_channel, command_prefix="d ", intents=intents)
-  dukol.run(token=os.environ['DISCORD_TOKEN'])
+  update_notificator_instance = UpdateNotificator(bot, target_channel)
+  loop = asyncio.get_event_loop()
+  loop.run_until_complete(bot.add_cog(update_notificator_instance))
+  bot.run(token=os.environ['DISCORD_TOKEN'])
