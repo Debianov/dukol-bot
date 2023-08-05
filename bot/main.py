@@ -13,7 +13,7 @@ class UpdateNotificator(commands.Cog):
     self.new_part_msg: str = ""
     self.len_last_msg: int = -1
 
-  def cog_load(self) -> None:
+  async def cog_load(self) -> None:
     self.update_checker.start()
 
   @tasks.loop(seconds=1)
@@ -31,7 +31,7 @@ class UpdateNotificator(commands.Cog):
     if self.new_part_msg:
       notification_embed = Embed()
       notification_embed.add_field(name="повідомлення", value=self.new_part_msg)
-      await self.channel.send(embed=notification_embed)
+      await self.target_channel.send(embed=notification_embed)
       self.new_part_msg = ""
 
 if __name__ == '__main__':
